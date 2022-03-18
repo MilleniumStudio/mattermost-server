@@ -23,6 +23,8 @@ RUN apk add --no-cache \
   tidyhtml \
   && rm -rf /tmp/*
 
+ADD dist tmp/
+
 # Get Mattermost
 RUN mkdir -p /mattermost/data /mattermost/plugins /mattermost/client/plugins \
   && if [ ! -z "$MM_PACKAGE" ]; then curl $MM_PACKAGE | tar -xvz ; \

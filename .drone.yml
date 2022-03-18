@@ -1,0 +1,63 @@
+---
+kind: pipeline
+type: docker
+name: linux-amd64
+
+platform:
+  arch: amd64
+  os: linux
+
+steps:
+- name: setup
+  image: mattermost/mattermost-build-webapp:20210524_node-16
+  environment:
+    CIRCLE_BRANCH: ${DRONE_BRANCH}
+  commands:
+  - env
+  - mkdir -p ./enterprise-dir/imports ./enterprise-dir/cloud/config
+  - cp imports/placeholder.go ./enterprise-dir/imports/imports.go
+  - touch ./enterprise-dir/ENTERPRISE-EDITION-LICENSE.txt
+  - touch ./enterprise-dir/cloud/config/cloud_defaults.json
+  - bash .drone/setup.sh
+
+- name: build
+  image: mattermost/mattermost-build-server:20210810_golang-1.16.7
+  environment:
+    CIRCLE_BRANCH: ${DRONE_BRANCH}
+    CIRCLE_BUILD_NUM: ${DRONE_BUILD_NUMBER}
+    BUILD_ENTERPRISE_DIR: ./enterprise-dir
+    BUILD_WEBAPP_DIR: ./mattermost-webapp
+  commands:
+  - bash .drone/build.sh
+  - mv dist build/
+
+- name: publish
+  image: plugins/docker
+  environment:
+    DOCKER_USERNAME:
+      from_secret: docker_username
+    DOCKER_PASSWORD:
+      from_secret: docker_password
+  settings:
+    build_args:
+    - MM_PACKAGE=file:///tmp/mattermost-enterprise-linux-amd64.tar.gz
+    dockerfile: build/Dockerfile
+    context: build
+    repo:
+      from_secret: docker_repo
+    auto_tag: true
+  when:
+    event:
+    - tag
+
+- name: notify_mattermost
+  image: plugins/slack
+  settings:
+    channel: sysadmin-notifs
+  environment:
+    SLACK_WEBHOOK:
+      from_secret: mattermost_webhook
+  when:
+    status:
+    - success
+    - failure

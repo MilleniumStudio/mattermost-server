@@ -123,6 +123,7 @@ func (s *Server) LoadLicense() {
 		return
 	}
 
+	/*
 	licenseId := ""
 	props, nErr := s.Store.System().Get()
 	if nErr == nil {
@@ -150,6 +151,27 @@ func (s *Server) LoadLicense() {
 	}
 
 	s.ValidateAndSetLicenseBytes([]byte(record.Bytes))
+	*/
+
+	// Enable all OSS features for everyone
+	f := model.Features{}
+	f.SetDefaults()
+	*f.Users = 9999
+
+	s.SetLicense(&model.License{
+		Id:        model.NewId(),
+		IssuedAt:  0,
+		ExpiresAt: 4102491600000, // 1st january 2100 in ms
+		Customer:  &model.Customer{
+			Name:    "Mr Robot",
+			Email:   "mrrobot@fsociety.com",
+			Company: "fsociety",
+		},
+		Features:  &f,
+		SkuName: "Enterprise",
+		SkuShortName: model.LicenseShortSkuEnterprise,
+	})
+
 	mlog.Info("License key valid unlocking enterprise features.")
 }
 
