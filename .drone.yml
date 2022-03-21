@@ -13,7 +13,7 @@ steps:
   environment:
     CIRCLE_BRANCH: ${DRONE_BRANCH}
   commands:
-  - env
+  - env 
   - mkdir -p ./enterprise-dir/imports ./enterprise-dir/cloud/config
   - cp imports/placeholder.go ./enterprise-dir/imports/imports.go
   - touch ./enterprise-dir/ENTERPRISE-EDITION-LICENSE.txt
