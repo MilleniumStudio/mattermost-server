@@ -91,65 +91,6 @@ func (s *Server) License() *model.License {
 }
 
 func (s *Server) LoadLicense() {
-	// ENV var overrides all other sources of license.
-	licenseStr := os.Getenv(LicenseEnv)
-	if licenseStr != "" {
-		license, err := utils.LicenseValidator.LicenseFromBytes([]byte(licenseStr))
-		if err != nil {
-			mlog.Error("Failed to read license set in environment.", mlog.Err(err))
-			return
-		}
-
-		// skip the restrictions if license is a sanctioned trial
-		if !license.IsSanctionedTrial() && license.IsTrialLicense() {
-			canStartTrialLicense, err := s.LicenseManager.CanStartTrial()
-			if err != nil {
-				mlog.Error("Failed to validate trial eligibility.", mlog.Err(err))
-				return
-			}
-
-			if !canStartTrialLicense {
-				mlog.Info("Cannot start trial multiple times.")
-				return
-			}
-		}
-
-		if s.ValidateAndSetLicenseBytes([]byte(licenseStr)) {
-			mlog.Info("License key from ENV is valid, unlocking enterprise features.")
-		}
-		return
-	}
-
-	/*
-	licenseId := ""
-	props, nErr := s.Store.System().Get()
-	if nErr == nil {
-		licenseId = props[model.SystemActiveLicenseId]
-	}
-
-	if !model.IsValidId(licenseId) {
-		// Lets attempt to load the file from disk since it was missing from the DB
-		license, licenseBytes := utils.GetAndValidateLicenseFileFromDisk(*s.Config().ServiceSettings.LicenseFileLocation)
-
-		if license != nil {
-			if _, err := s.SaveLicense(licenseBytes); err != nil {
-				mlog.Error("Failed to save license key loaded from disk.", mlog.Err(err))
-			} else {
-				licenseId = license.Id
-			}
-		}
-	}
-
-	record, nErr := s.Store.License().Get(licenseId)
-	if nErr != nil {
-		mlog.Error("License key from https://mattermost.com required to unlock enterprise features.", mlog.Err(nErr))
-		s.SetLicense(nil)
-		return
-	}
-
-	s.ValidateAndSetLicenseBytes([]byte(record.Bytes))
-	*/
-
 	// Enable all OSS features for everyone
 	f := model.Features{}
 	f.SetDefaults()
@@ -169,7 +110,7 @@ func (s *Server) LoadLicense() {
 		SkuShortName: model.LicenseShortSkuEnterprise,
 	})
 
-	mlog.Info("License key valid unlocking enterprise features.")
+	// mlog.Info("License key valid unlocking enterprise features.")	
 }
 
 func (s *Server) SaveLicense(licenseBytes []byte) (*model.License, *model.AppError) {
