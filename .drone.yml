@@ -9,7 +9,7 @@ platform:
 
 steps:
 - name: setup
-  image: mattermost/mattermost-build-webapp:20210524_node-16
+  image: mattermost/mattermost-build-webapp:20220802_node-16.10.0
   environment:
     CIRCLE_BRANCH: ${DRONE_BRANCH}
   commands:
@@ -21,7 +21,7 @@ steps:
   - bash .drone/setup.sh
 
 - name: build
-  image: mattermost/mattermost-build-server:20210810_golang-1.16.7
+  image: mattermost/mattermost-build-server:20220415_golang-1.18.1
   environment:
     CIRCLE_BRANCH: ${DRONE_BRANCH}
     CIRCLE_BUILD_NUM: ${DRONE_BUILD_NUMBER}
