@@ -77,7 +77,25 @@ RUN apt-get update \
   libwv-1.2-4=1.2.9-4.2+b2 \
   && rm -rf /var/lib/apt/lists/*
 
-# Set mattermost group/user and download Mattermost
+# Install some needed packages
+RUN apk add --no-cache \
+  ca-certificates \
+  curl \
+  libc6-compat \
+  libffi-dev \
+  linux-headers \
+  mailcap \
+  netcat-openbsd \
+  xmlsec-dev \
+  tzdata \
+  wv \
+  poppler-utils \
+  tidyhtml \
+  && rm -rf /tmp/*
+
+ADD dist tmp/
+
+# Get Mattermost
 RUN mkdir -p /mattermost/data /mattermost/plugins /mattermost/client/plugins \
     && addgroup -gid ${PGID} mattermost \
     && adduser -q --disabled-password --uid ${PUID} --gid ${PGID} --gecos "" --home /mattermost mattermost \
