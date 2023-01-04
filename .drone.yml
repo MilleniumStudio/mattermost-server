@@ -14,10 +14,10 @@ steps:
     CIRCLE_BRANCH: ${DRONE_BRANCH}
   commands:
   - env
-  - mkdir -p ./enterprise-dir/imports ./enterprise-dir/cloud/config
-  - cp imports/placeholder.go ./enterprise-dir/imports/imports.go
-  - touch ./enterprise-dir/ENTERPRISE-EDITION-LICENSE.txt
-  - touch ./enterprise-dir/cloud/config/cloud_defaults.json
+  - mkdir -p ./enterprise/imports ./enterprise/cloud/config
+  - cp imports/placeholder.go ./enterprise/imports/imports.go
+  - touch ./enterprise/ENTERPRISE-EDITION-LICENSE.txt
+  - touch ./enterprise/cloud/config/cloud_defaults.json
   - bash .drone/setup.sh
 
 - name: build
