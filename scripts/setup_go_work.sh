@@ -6,11 +6,6 @@ then
 
     txt="go 1.18\n\nuse ./\n"
     
-    if [ "$BUILD_ENTERPRISE_READY" == "true" ] 
-    then
-        txt="${txt}use ../enterprise-dir\n"
-    fi
-    
     if [ "$BUILD_BOARDS" == "true" ] 
     then
         txt="${txt}use ../focalboard/server\nuse ../focalboard/mattermost-plugin\n"
