@@ -8,7 +8,7 @@ then
     
     if [ "$BUILD_ENTERPRISE_READY" == "true" ] 
     then
-        txt="${txt}use ../enterprise\n"
+        txt="${txt}use ../enterprise-dir\n"
     fi
     
     if [ "$BUILD_BOARDS" == "true" ] 
