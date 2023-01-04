@@ -169,6 +169,7 @@ ifeq ($(BUILD_ENTERPRISE_READY),true)
 	IGNORE:=$(shell rm -f imports/imports.go)
 	IGNORE:=$(shell cp $(BUILD_ENTERPRISE_DIR)/imports/imports.go imports/)
 	IGNORE:=$(shell rm -f enterprise)
+    IGNORE:=$(shell ln -s $(BUILD_ENTERPRISE_DIR) enterprise)
 else
 	IGNORE:=$(shell rm -f imports/imports.go)
 endif
