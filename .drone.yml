@@ -25,7 +25,7 @@ steps:
   environment:
     CIRCLE_BRANCH: ${DRONE_BRANCH}
     CIRCLE_BUILD_NUM: ${DRONE_BUILD_NUMBER}
-    BUILD_ENTERPRISE_DIR: ./enterprise-dir
+    BUILD_ENTERPRISE_DIR: ./enterprise
     BUILD_WEBAPP_DIR: ./mattermost-webapp
   commands:
   - bash .drone/build.sh
